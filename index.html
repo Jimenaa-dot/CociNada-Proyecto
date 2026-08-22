@@ -497,12 +497,23 @@
       border-color: rgba(255,255,255,0.7);
       background-color: rgba(255, 253, 248, 0.85);
     }
-    .panel-peach .form-hint {
+    .form-hint {
       font-size: 0.85rem;
-      color: rgba(62, 50, 42, 0.65);
+      color: var(--text-muted);
       font-weight: 600;
+    }
+    .panel-peach .form-hint {
+      color: rgba(62, 50, 42, 0.65);
       margin-top: -8px;
       margin-bottom: 4px;
+    }
+    #assistant-ingredients-note,
+    #mind-ingredients-note {
+      background-color: var(--mint-pale);
+      border-left: 4px solid var(--mint-dark);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      line-height: 1.4;
     }
 
     .history-list { display: flex; flex-direction: column; gap: 4px; flex: 1; overflow-y: auto; max-height: 320px; padding-right: 4px; }
@@ -911,7 +922,9 @@
             <button id="add-btn" class="btn btn-add">➕</button>
           </div>
           <div id="ingredients-list" class="ingredients-list"></div>
+          <p id="mind-ingredients-note" class="form-hint hidden" style="margin-top:8px;">💡 Si agregas ingredientes, se preparará la versión del plato con esos ingredientes. Si quieres la receta original, elimínalos.</p>
         </div>
+        <p id="assistant-ingredients-note" class="form-hint hidden">🤖 En este modo el asistente elige el plato y los ingredientes por ti de forma aleatoria. No necesitas agregar ingredientes.</p>
       </div>
 
       <!-- Formas de cocinar -->
@@ -1177,32 +1190,57 @@
   const plannerMealSelect = $('planner-meal-select');
   const saveToCalendarBtn = $('save-to-calendar-btn');
 
+  // Elementos del panel de Ingredientes (izquierda)
+  const ingredientsPanelBody = $('mode-pantry-container');
+  const mindIngredientsNote = $('mind-ingredients-note');
+  const assistantIngredientsNote = $('assistant-ingredients-note');
+
+  let currentActiveMode = 'pantry';
+
   // Cambiar entre Pestañas de Modo
   modePantryBtn.addEventListener('click', () => {
+    currentActiveMode = 'pantry';
     modePantryBtn.classList.add('active');
     modeMindBtn.classList.remove('active');
     modeAssistantBtn.classList.remove('active');
     modePantryContainer.classList.remove('hidden');
     modeMindContainer.classList.add('hidden');
     modeAssistantContainer.classList.add('hidden');
+
+    // Panel de ingredientes: visible y editable, sin notas extra
+    ingredientsPanelBody.classList.remove('hidden');
+    mindIngredientsNote.classList.add('hidden');
+    assistantIngredientsNote.classList.add('hidden');
   });
 
   modeMindBtn.addEventListener('click', () => {
+    currentActiveMode = 'mind';
     modeMindBtn.classList.add('active');
     modePantryBtn.classList.remove('active');
     modeAssistantBtn.classList.remove('active');
     modeMindContainer.classList.remove('hidden');
     modePantryContainer.classList.add('hidden');
     modeAssistantContainer.classList.add('hidden');
+
+    // Panel de ingredientes: visible y editable, con nota aclaratoria
+    ingredientsPanelBody.classList.remove('hidden');
+    mindIngredientsNote.classList.remove('hidden');
+    assistantIngredientsNote.classList.add('hidden');
   });
 
   modeAssistantBtn.addEventListener('click', () => {
+    currentActiveMode = 'assistant';
     modeAssistantBtn.classList.add('active');
     modePantryBtn.classList.remove('active');
     modeMindBtn.classList.remove('active');
     modeAssistantContainer.classList.remove('hidden');
     modePantryContainer.classList.add('hidden');
     modeMindContainer.classList.add('hidden');
+
+    // Panel de ingredientes: oculto, el asistente decide todo aleatoriamente
+    ingredientsPanelBody.classList.add('hidden');
+    mindIngredientsNote.classList.add('hidden');
+    assistantIngredientsNote.classList.remove('hidden');
   });
 
   function updateAuthUI() {
@@ -1459,9 +1497,18 @@
   });
 
   // --- MODO 3: Deja que el asistente decida ---
-  assistantDecideBtn.addEventListener('click', async () => {
+  // Historial de platos ya sugeridos, agrupado por combinación de momento del día + estilo,
+  // para que el asistente nunca repita un plato dentro de la misma combinación.
+  let assistantHistoryByCombo = {};
+  function getComboKey(meal, category) {
+    return `${meal}||${category}`;
+  }
+
+  async function generateRandomRecipe() {
     const meal = assistantMealSelect.value;
     const category = assistantCategorySelect.value;
+    const comboKey = getComboKey(meal, category);
+    const excludedDishes = assistantHistoryByCombo[comboKey] || [];
 
     resultsArea.classList.remove('hidden');
     thinkingText.textContent = "El asistente está eligiendo una receta ideal para ti...";
@@ -1477,10 +1524,13 @@
     try {
       const rawData = await callN8NAPI({
         action: 'get_random_recipe',
-        ingredientes: activeIngredients.length > 0 ? [...activeIngredients] : [],
+        // El modo asistente es 100% aleatorio: no se envían ingredientes del usuario.
+        ingredientes: [],
         tipo_comida: meal || 'Aleatorio',
         dieta: category || 'Sin restricciones',
-        tiempo_max: 'Cualquiera'
+        tiempo_max: 'Cualquiera',
+        platos_excluidos: excludedDishes,
+        semilla: `${Date.now()}-${Math.random().toString(36).slice(2)}`
       });
 
       thinkingCard.classList.add('hidden');
@@ -1493,8 +1543,9 @@
 
       if (data && (data.titulo || data.dish || data.name)) {
         const ingList = normalizeIngredientsList(data.ingredientes || data.ingredients);
+        const dishName = data.titulo || data.dish || data.name || 'Receta Sorpresa';
         const normalizedRecipe = {
-          dish: data.titulo || data.dish || data.name || 'Receta Sorpresa',
+          dish: dishName,
           time: data.tiempo_preparacion || data.time || '20-30 min',
           ingredients: ingList,
           ingredientes: ingList,
@@ -1502,6 +1553,17 @@
           consejo_chef: data.consejo_chef || data.chefTip || null,
           dificultad: data.dificultad || null
         };
+
+        // Registrar el plato en el historial de esta combinación para no repetirlo la próxima vez.
+        if (!assistantHistoryByCombo[comboKey]) assistantHistoryByCombo[comboKey] = [];
+        if (!assistantHistoryByCombo[comboKey].includes(dishName)) {
+          assistantHistoryByCombo[comboKey].push(dishName);
+          // Limitamos el historial para no agotar las posibilidades del modelo.
+          if (assistantHistoryByCombo[comboKey].length > 12) {
+            assistantHistoryByCombo[comboKey].shift();
+          }
+        }
+
         renderSingleRecipeFromAPI(normalizedRecipe);
       } else {
         console.warn("Datos recibidos no compatibles:", rawData);
@@ -1515,7 +1577,9 @@
       assistantDecideBtn.disabled = false;
       assistantDecideBtn.textContent = assistantDecideBtn.dataset.originalText || '✨ Sorpréndeme';
     }
-  });
+  }
+
+  assistantDecideBtn.addEventListener('click', generateRandomRecipe);
 
   // --- DETALLE DE RECETA ---
   window.fetchRecipeDetailFromAPI = async function(dishName) {
@@ -1638,6 +1702,12 @@
   }
 
   resetBtn.addEventListener('click', () => {
+    // En modo asistente, "Probar otra búsqueda" pide de inmediato un plato distinto
+    // (el plato anterior queda excluido gracias al historial por combinación).
+    if (currentActiveMode === 'assistant') {
+      generateRandomRecipe();
+      return;
+    }
     resultsArea.classList.add('hidden');
     suggestionsContainer.classList.add('hidden');
     recipeModal.classList.add('hidden');
