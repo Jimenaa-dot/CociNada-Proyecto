@@ -68,16 +68,6 @@ resto de la interfaz.
 
 ---
 
-## Publicarlo con GitHub Pages
-
-1. En el repositorio: **Settings → Pages**.
-2. En "Source", elegí la rama `main` y la carpeta raíz (`/`).
-3. GitHub genera una URL pública del tipo `https://TU_USUARIO.github.io/cocinada/`.
-
-No hay build ni paso de compilación: lo que está en `index.html` es lo que se publica.
-
----
-
 ## Cómo está organizado
 
 ```
@@ -128,6 +118,3 @@ cuentas real. No uses una contraseña que uses en otro lado para probarlo.
 - **Autenticación real.** Ver la sección anterior.
 - **Tests.** Es un proyecto de clase.
 
-## Licencia
-
-MIT — ver [LICENSE](./LICENSE).
