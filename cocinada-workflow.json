@@ -10,7 +10,7 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "e4a3a194-fd37-4d67-b89c-50084b0d3165",
+      "id": "b8bab0e2-3688-4a41-8a60-0285f67a1547",
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
@@ -150,7 +150,7 @@
         },
         "options": {}
       },
-      "id": "00ac6db0-fe31-4b83-83f5-c2de6832fe37",
+      "id": "aeb60ed8-beca-4186-bcf6-9054d1fc00c8",
       "name": "Route Action",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
@@ -168,7 +168,7 @@
           "systemMessage": "Eres un chef asistente. Devuelve siempre exactamente 3 sugerencias de platos con su nombre y una idea de receta breve, en JSON estricto."
         }
       },
-      "id": "d66391dc-ec35-4144-a1fe-b29c699dc154",
+      "id": "a71d9fde-6747-4902-b7d0-df86fc267725",
       "name": "Suggest Dishes",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
@@ -181,7 +181,7 @@
       "parameters": {
         "jsonSchemaExample": "{\n  \"dishes\": [\n    {\n      \"name\": \"Tortilla de papas\",\n      \"idea\": \"Batir los huevos, freír las papas y cuajar en sartén.\"\n    },\n    {\n      \"name\": \"Sopa de verduras\",\n      \"idea\": \"Sofreír las verduras y hervir con caldo hasta que estén tiernas.\"\n    },\n    {\n      \"name\": \"Ensalada templada\",\n      \"idea\": \"Saltear los ingredientes y servir sobre hojas frescas.\"\n    }\n  ]\n}"
       },
-      "id": "f8e3424a-ae6b-4664-96bf-44090cbb29cb",
+      "id": "23eed4a9-10a8-46e5-89f0-ef711ac4a374",
       "name": "Dishes Output Parser",
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
@@ -196,7 +196,7 @@
         "responseBody": "={{ $json.output }}",
         "options": {}
       },
-      "id": "b7736af1-2115-48bd-8817-adca48d8df50",
+      "id": "1f579691-b9ad-4520-80ef-5d5f4501281b",
       "name": "Respond Dishes",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
@@ -214,7 +214,7 @@
           "systemMessage": "Eres un chef asistente. Devuelve la receta completa en JSON estricto según el esquema: nombre del plato, ingredientes necesarios, tiempo estimado y pasos detallados de preparación. Es obligatorio que la lista de ingredientes sea completa: todo lo que se use en los pasos debe figurar en la lista de ingredientes con su cantidad, incluyendo básicos como sal, aceite, agua o especias. El ejemplo de formato que recibes tiene fines ilustrativos únicamente; el número real de ingredientes depende de cada plato y no debe limitarse a ese ejemplo."
         }
       },
-      "id": "53b0b462-1682-4f54-b66a-8ae98178da50",
+      "id": "fcf45132-4e1b-4e40-abec-49a6ecb87b6c",
       "name": "Generate Recipe",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
@@ -227,7 +227,7 @@
       "parameters": {
         "jsonSchemaExample": "{\n  \"dish\": \"Tortilla de papas\",\n  \"ingredients\": [\n    \"4 huevos\",\n    \"3 papas medianas\",\n    \"1/2 cebolla picada\",\n    \"2 cucharadas de aceite de oliva\",\n    \"1 cucharadita de sal\",\n    \"Pimienta al gusto\"\n  ],\n  \"time\": \"30 minutos\",\n  \"steps\": [\n    \"Pelar y cortar las papas en láminas finas.\",\n    \"Freír las papas y la cebolla en el aceite a fuego medio hasta que estén tiernas.\",\n    \"Batir los huevos con la sal y la pimienta, mezclar con las papas y cuajar la tortilla por ambos lados.\"\n  ]\n}"
       },
-      "id": "2f4fe71f-7c3f-412f-bf81-9ed37eebf88b",
+      "id": "7d610b55-892f-425c-b3e5-6ad8d6ff9a4b",
       "name": "Recipe Output Parser",
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
@@ -242,7 +242,7 @@
         "responseBody": "={{ $json.output }}",
         "options": {}
       },
-      "id": "f8c03351-130a-4b1c-968a-0fe2a030017f",
+      "id": "a86fbc01-89b5-4054-a280-6965928316cc",
       "name": "Respond Recipe",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
@@ -260,7 +260,7 @@
           "systemMessage": "Eres un asistente culinario estrictamente literal y organized. Tu función es transformar la lista de compras (ya filtrada por el usuario) en un resumen estructurado para un correo electrónico.\n\nREGLAS DE PROCESAMIENTO:\n1. FIDELIDAD ABSOLUTA: Usa ÚNICAMENTE los platos presentes en el array recibido. NO agregues, inventes ni completes días/comidas que no aparezcan en el JSON.\n2. Cada elemento del array tiene \"plato\" (formato: \"📌 [Día] ([Comida]): [emoji] [Nombre]\") e \"ingredientes\" (lista). Extrae el día, el tipo de comida y el nombre del plato de ese texto.\n3. Para cada plato muestra: nombre del plato y su lista de ingredientes (sin pasos de preparación).\n4. Organiza el correo agrupando por día y luego por comida, en el orden en que aparecen en el array.\n5. FIRMA OBLIGATORIA: Firma siempre como \"Tu asistente culinario CociNADA\".\n6. Responde en español, con saltos de línea legibles."
         }
       },
-      "id": "a1baf918-14d2-4619-9993-d900f9052209",
+      "id": "ac90bcb9-73ca-4ce6-a50d-82a4c6b5a8df",
       "name": "Format Weekly Menu",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
@@ -273,7 +273,7 @@
       "parameters": {
         "jsonSchemaExample": "{\n  \"subject\": \"📅 Tu Menú Semanal de CociNADA\",\n  \"body\": \"¡Hola! Aquí tienes la planificación de tus comidas para esta semana:\\n\\nLunes\\n• Desayuno: Omelette de queso y tomate\\n• Almuerzo: Arroz con pollo\\n• Cena: Sopa de verduras\\n\\n(...)\\n\\n💡 Consejo de la semana: Revisa tus ingredientes antes de comprar.\\n\\n¡Buen provecho y feliz semana! 🍳\"\n}"
       },
-      "id": "2bf12f02-a3bd-454b-828e-1d75e81c5188",
+      "id": "bd2fd9d4-f52f-428e-bc90-f9a42a52735e",
       "name": "Menu Output Parser",
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
@@ -292,7 +292,7 @@
           "senderName": "CociNADA"
         }
       },
-      "id": "7e223b45-0a64-4db2-87a2-42185225ac53",
+      "id": "0b346d20-45ef-422d-98de-e93427755a2b",
       "name": "Send Menu Email",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
@@ -303,8 +303,8 @@
       "webhookId": "d8e9a53b-7a19-443b-91fa-fae6a33a905d",
       "credentials": {
         "gmailOAuth2": {
-          "id": "0QBQv9nyGHMoibXS",
-          "name": "Gmail account"
+          "id": "1shvtrcGmt2wDPFL",
+          "name": "Gmail account 2"
         }
       }
     },
@@ -314,7 +314,7 @@
         "responseBody": "={{ { \"status\": \"sent\", \"to\": $('Webhook').item.json.body.userEmail } }}",
         "options": {}
       },
-      "id": "a113075f-d533-4ec3-9fe6-aa781613eb02",
+      "id": "f0b2e60d-7670-4b1f-884a-e9dfa9b5aeb4",
       "name": "Respond Menu",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
@@ -328,18 +328,18 @@
         "modelName": "models/gemini-3.1-flash-lite",
         "options": {}
       },
+      "id": "3672d718-763c-4707-88dd-b803da1b15d0",
+      "name": "Google Gemini Chat Model",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1.1,
       "position": [
         16,
         672
       ],
-      "id": "93202b76-bdb0-4d35-b10e-fb45c46c8e97",
-      "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "LxkKiAcCo84YqhsD",
-          "name": "Google Gemini(PaLM) Api account 2"
+          "id": "dO6wsY50OiHA3wNz",
+          "name": "Google Gemini(PaLM) Api account"
         }
       }
     },
@@ -348,18 +348,18 @@
         "modelName": "models/gemini-3.1-flash-lite",
         "options": {}
       },
+      "id": "1cc3b8c9-3b3f-43c6-b6c0-cb7401ba8db3",
+      "name": "Google Gemini Chat Model1",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1.1,
       "position": [
         0,
         1536
       ],
-      "id": "1f674112-08fe-40e9-8de6-b262fba5b983",
-      "name": "Google Gemini Chat Model1",
       "credentials": {
         "googlePalmApi": {
-          "id": "LxkKiAcCo84YqhsD",
-          "name": "Google Gemini(PaLM) Api account 2"
+          "id": "dO6wsY50OiHA3wNz",
+          "name": "Google Gemini(PaLM) Api account"
         }
       }
     },
@@ -368,18 +368,18 @@
         "modelName": "models/gemini-3.1-flash-lite",
         "options": {}
       },
+      "id": "148c0ae6-7584-4f24-a49a-d44cf6bc1297",
+      "name": "Google Gemini Chat Model2",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1.1,
       "position": [
         0,
         1920
       ],
-      "id": "0338d524-fccc-4a91-9bc3-20b47e4a34a7",
-      "name": "Google Gemini Chat Model2",
       "credentials": {
         "googlePalmApi": {
-          "id": "LxkKiAcCo84YqhsD",
-          "name": "Google Gemini(PaLM) Api account 2"
+          "id": "dO6wsY50OiHA3wNz",
+          "name": "Google Gemini(PaLM) Api account"
         }
       }
     },
@@ -392,20 +392,20 @@
           "systemMessage": "Eres un chef asistente experto. Devuelve recetas completas, detalladas y con cantidades exactas en JSON estricto. Es obligatorio que la lista de ingredientes sea completa: todo lo que se use en los pasos debe figurar en la lista de ingredientes con su cantidad, incluyendo básicos como sal, aceite, agua o especias. El ejemplo de formato que recibes tiene fines ilustrativos únicamente; el número real de ingredientes depende de cada plato y no debe limitarse a ese ejemplo."
         }
       },
+      "id": "33baaca3-6378-4a2b-9d37-29bd349169d0",
+      "name": "Generate Recipe By Name",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
         0,
         0
-      ],
-      "id": "095305f5-1a4d-4ed3-aaa2-917254e7c316",
-      "name": "Generate Recipe By Name"
+      ]
     },
     {
       "parameters": {
         "jsonSchemaExample": "{\n  \"dish\": \"Lomo saltado\",\n  \"ingredients\": [\n    \"500 g de lomo de res en tiras\",\n    \"2 papas grandes cortadas en bastones\",\n    \"1 cebolla roja en tiras\",\n    \"2 tomates en tiras\",\n    \"3 cucharadas de sillao (salsa de soya)\",\n    \"1 cucharada de vinagre tinto\",\n    \"2 cucharadas de aceite vegetal\",\n    \"Sal y pimienta al gusto\",\n    \"Culantro picado para decorar\"\n  ],\n  \"time\": \"25 minutos\",\n  \"steps\": [\n    \"Freír las papas en bastones hasta dorarlas y reservar.\",\n    \"Saltear la carne a fuego alto con sal y pimienta.\",\n    \"Agregar la cebolla y el tomate, saltear brevemente.\",\n    \"Añadir el sillao, el vinagre y las papas fritas, mezclar y servir de inmediato.\"\n  ]\n}"
       },
-      "id": "bcce8098-432c-4d15-8e05-3d5acde2696f",
+      "id": "148ee6bd-d629-44ca-be19-c8bdd6b58794",
       "name": "Recipe Output Parser1",
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
@@ -419,18 +419,18 @@
         "modelName": "models/gemini-3.1-flash-lite",
         "options": {}
       },
+      "id": "a5c18c74-a0cf-45ed-a4f3-262d2d05374d",
+      "name": "Google Gemini Chat Model3",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1.1,
       "position": [
         0,
         240
       ],
-      "id": "a8611121-49ec-4000-94b7-6efdcf6cd0f1",
-      "name": "Google Gemini Chat Model3",
       "credentials": {
         "googlePalmApi": {
-          "id": "LxkKiAcCo84YqhsD",
-          "name": "Google Gemini(PaLM) Api account 2"
+          "id": "dO6wsY50OiHA3wNz",
+          "name": "Google Gemini(PaLM) Api account"
         }
       }
     },
@@ -440,7 +440,7 @@
         "responseBody": "={{ $json.output }}",
         "options": {}
       },
-      "id": "de78fdb6-4091-4baa-8ce8-4e1f1e815324",
+      "id": "af27f63b-200b-4951-8b6c-8ed82876b1b9",
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
@@ -458,7 +458,7 @@
           "systemMessage": "Eres un chef ejecutivo virtual especializado en generar recetas estructuradas para una aplicación web.\n\nREGLAS OBLIGATORIAS:\n1. Devuelve exactamente una receta.\n2. Respeta los parámetros recibidos desde $json.body.\n3. Responde únicamente con un objeto JSON que cumpla el esquema solicitado.\n4. No incluyas markdown, bloques de código, saludos ni explicaciones fuera del JSON.\n5. Utiliza cantidades concretas y pasos coherentes.\n6. Si hay ingredientes disponibles, priorízalos cuando sea razonable.\n7. Si falta información, decide de forma creativa sin inventar restricciones.\n8. Mantén siempre válidos los tipos y campos requeridos por el Output Parser.\n9. NUNCA repitas un plato que aparezca en la lista de \"platos ya sugeridos\" recibida en el prompt; siempre ofrece variedad real, incluso entre llamadas consecutivas con los mismos parámetros."
         }
       },
-      "id": "f6078ebf-0f16-4903-bc4d-a0f25e5a5ce2",
+      "id": "e248c075-3085-4a4c-9735-5e44e33dad80",
       "name": "Generate random Recipe",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
@@ -476,18 +476,18 @@
           "topP": 0.97
         }
       },
+      "id": "b80a3fb7-aeb6-4c55-8c87-ee74e6bdf011",
+      "name": "Google Gemini Chat Model4",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1.1,
       "position": [
         16,
         1152
       ],
-      "id": "348587a9-67e3-41de-8eca-63a886282ef3",
-      "name": "Google Gemini Chat Model4",
       "credentials": {
         "googlePalmApi": {
-          "id": "LxkKiAcCo84YqhsD",
-          "name": "Google Gemini(PaLM) Api account 2"
+          "id": "dO6wsY50OiHA3wNz",
+          "name": "Google Gemini(PaLM) Api account"
         }
       }
     },
@@ -497,7 +497,7 @@
         "responseBody": "={{ JSON.parse($json.output) }}",
         "options": {}
       },
-      "id": "0c10cb70-c850-47a4-84a9-f4adafac418b",
+      "id": "1c38e755-73d7-465b-9458-1f97c5e4ec2f",
       "name": "Respond Recipe1",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
@@ -507,6 +507,7 @@
       ]
     }
   ],
+  "pinData": {},
   "connections": {
     "Webhook": {
       "main": [
@@ -727,11 +728,14 @@
   "active": true,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "availableInMCP": false
   },
-  "versionId": "e7e9dd47-8492-4e42-bfaa-54f0c315835a",
-  "meta": {},
+  "versionId": "9685b9fd-20fd-4e2c-87f7-7c8d8dd9d4ec",
+  "meta": {
+    "instanceId": "a3e76c453a1d1484c0f739c1b55f34553f7e03be34e4f8b5d60a472fc853a66c"
+  },
   "nodeGroups": [],
-  "id": "Vqyag9Bfg72TUgxm",
+  "id": "fBFVMuz69gIMZka0",
   "tags": []
 }
