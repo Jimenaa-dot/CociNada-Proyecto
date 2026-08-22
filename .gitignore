@@ -1,0 +1,28 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (por si se agrega tooling en el futuro: live-server, vite, etc.)
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-error.log*
+
+# Variables de entorno / secretos
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.bak
